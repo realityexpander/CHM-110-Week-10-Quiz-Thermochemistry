@@ -4,7 +4,7 @@ A single-page, two-stage chemistry practice app for **CHM-110 Week 10: gas laws,
 
 Each exercise first asks you to **identify the correct equation or conversion path** (multiple choice), then requires you to **type the final answer with the correct significant figures**. Incorrect attempts provide hints, and complete solutions show the dimensional-analysis setup **with units**.
 
-**Version:** v2 — platform-specific hotkey hints and selected Stage 1 equation shown above Stage 2.
+**Version:** v3 — scientific-notation input/output, CHM-110 atomic masses, ±1.5% numeric tolerance, and Stage 1 equation included in full solutions.
 
 **Live source:** [CHM-110-Week-10-Quiz-Thermochemistry](https://github.com/realityexpander/CHM-110-Week-10-Quiz-Thermochemistry)
 
@@ -13,10 +13,10 @@ Each exercise first asks you to **identify the correct equation or conversion pa
 - **14 question families** modeled on a CHM-110 Week 10 practice quiz. One randomized instance of each appears per 14-question round; the order is shuffled again each round.
 - **Two stages per question:** (1) select the correct equation/method; (2) see the selected equation displayed above Stage 2 and enter a numerical answer, or type the classification for conceptual questions.
 - **Randomized values and presentation:** mass (g/kg), volume (L/mL), pressure (atm/Torr), temperature (°C/K), heat (J/kJ), enthalpy signs, and balanced-reaction scaling where applicable.
-- **Significant-figure validation:** the numeric value and the count of significant figures are checked separately. Scientific notation such as `5.50e3` is accepted.
+- **Answer validation:** numerical answers within **±1.5%** of the unrounded expected result are accepted **only if the required significant-figure count also matches**. Accepts scientific notation such as `1.10x10^23`, `1.10*10^23`, `1.10×10^23`, and `1.10e23`. App displays scientific values as **6.31 × 10⁴** rather than `6.31e+4`.
 - **Units Mode:** OFF displays the expected unit beside the answer field; ON requires selecting the correct unit from a pop-up with **at least four options** after the numeric answer is right.
 - **Unlimited retries**, escalating hints, **Skip**, **Show answer**, and **Show solution**.
-- **Dimensional-analysis solutions**, including chemical mole ratios and explicit factor-label units.
+- **Dimensional-analysis solutions**, including the original **Stage 1 equation / selected method**, chemical mole ratios, and explicit factor-label units.
 - **Correct, Incorrect, Accuracy, Streak, and Best Streak** scorekeeping. Results persist in the browser's local storage and can be reset.
 - **Dark and light themes**, responsive layout, keyboard shortcuts with platform-aware button/help labels (`Opt+` on Mac or `Alt+` on Windows), and LaTeX rendering via MathJax.
 - **No build tools, framework, installation, backend, or account required.** The application is one HTML file.
@@ -42,7 +42,7 @@ Each exercise first asks you to **identify the correct equation or conversion pa
 
 ## Run locally
 
-1. Download [`index_v2.html`](index_v2.html) (or the deployment-ready `index.html` from the ZIP).
+1. Download [`index_v3.html`](index_v3.html) (or the deployment-ready `index.html` from the ZIP).
 2. Double-click the file to open it in a modern browser; alternatively, serve it with a small static server.
 3. Allow access to the internet so MathJax can render the LaTeX mathematics.
 
@@ -51,7 +51,7 @@ All quiz logic is embedded in the single HTML file. The only external runtime re
 ## Deploy on GitHub Pages
 
 1. Create (or open) the repository **`realityexpander/CHM-110-Week-10-Quiz-Thermochemistry`**.
-2. Upload `index.html` from the ZIP to the root of the default branch (`main`). This is the deploy-ready copy of `index_v2.html`. Upload this `README.md` alongside it. You can also keep `index_v2.html` in the repository for version history.
+2. Upload `index.html` from the ZIP to the root of the default branch (`main`). This is the deploy-ready copy of `index_v3.html`. Upload this `README.md` alongside it. You can also keep `index_v3.html` in the repository for version history.
 3. In the repository, navigate to **Settings → Pages**.
 4. Under **Build and deployment**, select **Deploy from a branch**.
 5. Choose `main` and `/ (root)`, then save.
@@ -92,8 +92,10 @@ While the unit-selection pop-up is open, choose its first four/five options with
 - **Pressure conversion:** `760 Torr = 1 atm`.
 - **Temperature conversion:** `T(K) = T(°C) + 273.15`.
 - **Avogadro's constant:** `6.02214076 × 10^23 mol⁻¹`.
-- The application uses **3 significant figures** for each randomized final numerical answer, with input values formatted to support that precision. Conversion factors and formula coefficients are treated as exact.
-- For ambiguous trailing zeros in an integer, use explicit scientific notation such as `5.50e3` for 3 significant figures.
+- The application uses **3 significant figures** for each randomized final numerical answer. The app checks both the **±1.5% relative numeric tolerance** and **exactly 3 significant figures**. Conversion factors and formula coefficients are treated as exact.
+- Accepted notation: `1.10x10^23`, `1.10*10^23`, `1.10×10^23`, or `1.10e23`; output is rendered as **1.10 × 10²³**.
+- Atomic masses (g/mol): **H = 1.01; C = 12.01; N = 14.01; O = 16.00**. Derived molar masses: **butane 58.14; ammonium nitrate 80.06; acetic acid 60.06; N₂O₃ 76.02**.
+- For ambiguous trailing zeros in an integer, use explicit scientific notation such as `5.50x10^3` for 3 significant figures.
 - Signed energy (`q`) is negative if the sample releases heat; reaction questions asking *how much energy is released* expect the positive magnitude.
 - Chemical equations are balanced. Whole-number scaling of all reaction coefficients is accompanied by matching scaling of reaction enthalpy.
 
@@ -102,6 +104,12 @@ While the unit-selection pop-up is open, choose its first four/five options with
 ## Repository description (GitHub About)
 
 > Interactive CHM-110 Week 10 gas laws and thermochemistry quiz: randomized two-stage questions, significant-figure checking, unit drills, keyboard shortcuts, and dimensional-analysis solutions.
+
+## Version history
+
+- **v3:** Added typed `x10^` and `*10^` scientific notation; readable multiplication-sign/exponent output; updated H/C/N/O atomic masses; ±1.5% numerical tolerance combined with significant-figure validation; and the Stage 1 equation at the beginning of Show Solution.
+- **v2:** Automatic `Opt+`/`Alt+` labels and selected equation displayed above Stage 2.
+- **v1:** Initial randomized two-stage 14-question quiz.
 
 ## Attribution
 

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <meta name="description" content="CHM-110 Week 10 gas laws and thermochemistry: randomized two-stage chemistry practice with significant figures, dimensional analysis, and keyboard shortcuts.">
-<title>CHM-110 Week 10 | Gases &amp; Thermochemistry Drill</title>
+<title>CHM-110 Week 10 | Gases &amp; Thermochemistry Drill v3</title>
 <script>
 window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']]}, options: {skipHtmlTags: ['script','noscript','style','textarea','pre','code']}, chtml: {scale: 1.04} };
 </script>
@@ -19,7 +19,7 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
 <body>
 <div class="wrap">
 <header class="header">
-  <div><div class="eyebrow">Midlands Technical College · CHM-110</div><h1>Week 10: Gases &amp; Thermochemistry</h1><p class="subtitle">Two-stage formula recognition + typed-answer drill · 14 randomized question families</p></div>
+  <div><div class="eyebrow">Midlands Technical College · CHM-110</div><h1>Week 10: Gases &amp; Thermochemistry</h1><p class="subtitle">Two-stage formula recognition + typed-answer drill · 14 randomized question families · v3</p></div>
   <div class="actions"><button id="themeBtn" class="ghost" type="button" title="Toggle light/dark theme">☼ Theme</button><button id="resetBtn" class="ghost negative" type="button">↺ Reset score</button></div>
 </header>
 <section class="stats" aria-label="Quiz scores">
@@ -44,7 +44,9 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
 <details class="help"><summary>Keyboard shortcuts &amp; grading notes</summary><div class="help-inner">
 <div class="helpkeys"><span><kbd>1</kbd>–<kbd>4</kbd> choose formula</span><span><kbd>Enter</kbd> check answer / next</span><span><kbd data-shortcut="H"></kbd> hint</span><span><kbd data-shortcut="S"></kbd> skip</span><span><kbd data-shortcut="A"></kbd> reveal answer</span><span><kbd data-shortcut="R"></kbd> reveal solution</span><span><kbd data-shortcut="N"></kbd> next</span><span><kbd data-shortcut="U"></kbd> units toggle</span></div>
 <p><strong>Scoring:</strong> A problem counts correct only if both stages are completed without an error, hint, reveal, or skip. The first miss on a problem counts it incorrect once; you may retry as often as you like. Skips and reveals count as missed. Streak counts consecutive first-try completions.</p>
-<p><strong>Significant figures:</strong> Enter exactly the required significant figures (including trailing zeros), e.g. <kbd>2.30</kbd> vs <kbd>2.3</kbd>. Scientific notation such as <kbd>5.50e3</kbd> is accepted. Bare integers with trailing zeros can be ambiguous; use scientific notation or a decimal point to show precision explicitly. Rounding is checked against the computed value. Exact definitions and conversion factors do not limit precision.</p>
+<p><strong>Scientific notation:</strong> You may type <kbd>1.10x10^23</kbd>, <kbd>1.10*10^23</kbd>, <kbd>1.10×10^23</kbd>, or <kbd>1.10e23</kbd>. Displayed answers use the form 1.10 × 10<sup>23</sup>, not e-notation.</p>
+<p><strong>Significant figures and tolerance:</strong> Numerical entries within <strong>±1.5%</strong> of the calculated answer are accepted <strong>when the required significant-figure count also matches</strong>. Enter explicit trailing zeros, e.g. <kbd>2.30</kbd>, not <kbd>2.3</kbd>; use scientific notation to disambiguate large integers. Exact conversion factors do not limit precision.</p>
+<p><strong>Atomic masses:</strong> H = 1.01, C = 12.01, N = 14.01, O = 16.00 g/mol (course conventions).</p>
 <p><strong>Units Mode:</strong> OFF displays the target unit beside the typed number. ON hides it and asks you to choose the correct unit from at least four options after the number is correct. Numbers are always entered in the units requested by the question (not converted to alternate units). In conceptual questions, type the classification instead.</p>
 <p><strong>STP:</strong> This course uses 0°C, 1 atm, and 22.4 L/mol. Ideal gas calculations use R = 0.08206 L·atm/(mol·K). The application uses MathJax from a CDN to render LaTeX, so an internet connection is recommended on first load.</p>
 </div></details>
@@ -56,6 +58,14 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
 (() => {
   // Entire quiz engine is intentionally inline for simple GitHub Pages deployment.
   const R = 0.08206, NA = 6.02214076e23, VM = 22.4;
+  // Molar masses are derived from the requested CHM-110 atomic masses.
+  const ATOMIC_MASS = Object.freeze({H:1.01,C:12.01,N:14.01,O:16.00});
+  const MOLAR_MASS = Object.freeze({
+    butane: 4*ATOMIC_MASS.C+10*ATOMIC_MASS.H,
+    ammoniumNitrate: 2*ATOMIC_MASS.N+4*ATOMIC_MASS.H+3*ATOMIC_MASS.O,
+    aceticAcid: 2*ATOMIC_MASS.C+4*ATOMIC_MASS.H+2*ATOMIC_MASS.O,
+    dinitrogenTrioxide: 2*ATOMIC_MASS.N+3*ATOMIC_MASS.O
+  });
   const $ = id => document.getElementById(id);
   // Prefer User-Agent Client Hints when present, then the legacy platform / UA.
   // macOS Option and Windows Alt both produce KeyboardEvent.altKey.
@@ -72,6 +82,10 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
   const sig = (value,digits=3) => Number(Number(value).toPrecision(digits));
   const pretty = (value,digits=3) => { let v=Number(value).toPrecision(digits); if(!v.includes('.') && !/[eE]/.test(v) && /0$/.test(v))v+='.';return v; };
   const texNum = (s) => String(s).replace(/([+-]?(?:\d+\.?\d*|\.\d+))[eE]([+-]?\d+)/g,(_a,b,e)=>`${b}\\times10^{${Number(e)}}`);
+  // Convert computer notation to readable scientific notation in ordinary HTML.
+  // LaTeX math continues to use texNum() for correctly typeset exponents.
+  const scientificHTML = (s) => String(s).replace(/([+-]?(?:\d+\.?\d*|\.\d+))[eE]([+-]?\d+)/g,
+    (_all,mantissa,exp)=>`${mantissa} × 10<sup>${Number(exp)}</sup>`);
   const pr = (v,d=5) => texNum(pretty(v,d));
   const measured = (lo,hi,d=3) => {const v=sig(rand(lo,hi),d);return {v,s:pretty(v,d),d};};
   const pUnit = pickUnit => pickUnit==='Torr' ? 'Torr' : 'atm';
@@ -119,13 +133,13 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
   function numericAnswer(v,unit,digits=3,extra={}) {return {kind:'number',value:v,unit,digits,...extra};}
   function gen1(){
     const m=mass(3.00,26),p=pressure(),t=temperature(60,500);const scaled=pick([1,1,2]);
-    const a=2*scaled,b=10*scaled, nA=m.g/58.12,nB=nA*b/a,V=nB*R*t.k/p.atm;
+    const a=2*scaled,b=10*scaled, nA=m.g/MOLAR_MASS.butane,nB=nA*b/a,V=nB*R*t.k/p.atm;
     return base({id:1,category:'Gas stoichiometry',title:'Combustion: grams → gas volume',method:'gasStoich',
       prompt:`When <strong>${m.s} ${m.unit}</strong> of butane burns completely in excess oxygen at <strong>${t.s} ${t.unit}</strong> and <strong>${p.s} ${p.unit}</strong>, how many <strong>liters of gaseous H₂O</strong> are produced?`,
       equation: `${a}\\mathrm{C_4H_{10}(l)}+${13*scaled}\\mathrm{O_2(g)}\\rightarrow${8*scaled}\\mathrm{CO_2(g)}+${b}\\mathrm{H_2O(g)}`,
       facts:'',expected:numericAnswer(V,'L'),
       hints:['First turn the given mass of butane into moles, then use the balanced coefficients.','The H₂O-to-butane mole ratio is '+b+'/'+a+'. Convert gas pressure to atm and temperature to K.','Use V = nRT/P with the moles of H₂O (not butane).'],
-      solutions:[sol('Convert mass to moles of butane',`${texNum(m.s)}\\ \\mathrm{${m.unit}}\\times\\frac{${m.unit==='g'?'1\\ \\mathrm{mol}':'1000\\ \\mathrm{g}'}}{${m.unit==='g'?'58.12\\ \\mathrm{g}':'1\\ \\mathrm{kg}'}}${m.unit==='g'?'':'\\times\\frac{1\\ \\mathrm{mol}}{58.12\\ \\mathrm{g}}'}=${pr(nA)}\\ \\mathrm{mol\\ C_4H_{10}}`),
+      solutions:[sol('Convert mass to moles of butane',`${texNum(m.s)}\\ \\mathrm{${m.unit}}\\times\\frac{${m.unit==='g'?'1\\ \\mathrm{mol}':'1000\\ \\mathrm{g}'}}{${m.unit==='g'?'58.14\\ \\mathrm{g}':'1\\ \\mathrm{kg}'}}${m.unit==='g'?'':'\\times\\frac{1\\ \\mathrm{mol}}{58.14\\ \\mathrm{g}}'}=${pr(nA)}\\ \\mathrm{mol\\ C_4H_{10}}`),
       sol('Use the balanced mole ratio',`${pr(nA)}\\ \\mathrm{mol\\ C_4H_{10}}\\times\\frac{${b}\\ \\mathrm{mol\\ H_2O}}{${a}\\ \\mathrm{mol\\ C_4H_{10}}}=${pr(nB)}\\ \\mathrm{mol\\ H_2O}`),
       sol('Convert gas conditions to atm and K',`P=${texNum(p.s)}\\ \\mathrm{${p.unit}}${p.unit==='Torr'?'\\times\\frac{1\\ \\mathrm{atm}}{760\\ \\mathrm{Torr}}':''}=${pr(p.atm)}\\ \\mathrm{atm},\\quad T=${t.unit==='°C'?`${texNum(t.s)}+273.15`:texNum(t.s)}=${pr(t.k)}\\ \\mathrm{K}`),
       sol('Solve for volume',`V=\\frac{nRT}{P}=\\frac{(${pr(nB)}\\ \\mathrm{mol})(0.08206\\ \\frac{\\mathrm{L\\cdot atm}}{\\mathrm{mol\\cdot K}})(${pr(t.k)}\\ \\mathrm{K})}{${pr(p.atm)}\\ \\mathrm{atm}}=${pr(V)}\\ \\mathrm{L}`)]});
@@ -152,7 +166,7 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
   function gen4(){
     const m=measured(75,400),ti=measured(13,37),delta=measured(14,54),tf=sig(ti.v+delta.v,3);const c=pick([{v:.130,s:'0.130',mat:'gold'},{v:.385,s:'0.385',mat:'copper'},{v:.900,s:'0.900',mat:'aluminum'}]);const q=m.v*c.v*(tf-ti.v);const qMeas=sig(q,3),qu=pick(['J','kJ']),qDisplay=qu==='J'?qMeas:sig(qMeas/1000,3), qActual=qu==='J'?qDisplay:qDisplay*1000;const massG=qActual/(c.v*(tf-ti.v));
     return base({id:4,category:'Calorimetry',title:'Specific heat: solve for kilograms',method:'heatMass',
-      prompt:`A sample of <strong>${c.mat}</strong> absorbs <strong>${pretty(qDisplay,3)} ${qu}</strong> as it warms from <strong>${pretty(ti.v,3)} °C</strong> to <strong>${pretty(tf,3)} °C</strong>. Its specific heat is <strong>${c.s} J/(g·°C)</strong>. How many <strong>kilograms</strong> does the sample have?`,
+      prompt:`A sample of <strong>${c.mat}</strong> absorbs <strong>${scientificHTML(pretty(qDisplay,3))} ${qu}</strong> as it warms from <strong>${pretty(ti.v,3)} °C</strong> to <strong>${pretty(tf,3)} °C</strong>. Its specific heat is <strong>${c.s} J/(g·°C)</strong>. How many <strong>kilograms</strong> does the sample have?`,
       expected:numericAnswer(massG/1000,'kg'),hints:['Start with q = mcΔT. Rearrange to m = q/(cΔT).','Find ΔT = Tfinal − Tinitial, and convert heat energy to joules.','The formula gives grams because c is in J/(g·°C); divide by 1000 for kg.'],
       solutions:[sol('Temperature change',`\\Delta T=(${pretty(tf,3)}-${pretty(ti.v,3)})\\ ^\\circ\\mathrm{C}=${pr(tf-ti.v)}\\ ^\\circ\\mathrm{C}`),
       sol('Convert energy to J',`${texNum(pretty(qDisplay,3))}\\ \\mathrm{${qu}}${qu==='kJ'?'\\times\\frac{1000\\ \\mathrm{J}}{1\\ \\mathrm{kJ}}':''}=${pr(qActual)}\\ \\mathrm{J}`),
@@ -160,11 +174,11 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
       sol('Grams → kilograms',`${pr(massG)}\\ \\mathrm{g}\\times\\frac{1\\ \\mathrm{kg}}{1000\\ \\mathrm{g}}=${pr(massG/1000)}\\ \\mathrm{kg}`)]});
   }
   function gen5(){
-    const m=mass(.35,3.80);const hm=measured(15.0,42.0);const positive=Math.random()<.7;let q=(m.g/80.052)*hm.v*(positive?1:-1);let qu=pick(['kJ','J']);let qDisp=qu==='kJ'?sig(Math.abs(q),3):sig(Math.abs(q)*1000,3);q=(positive?1:-1)*(qu==='kJ'?qDisp:qDisp/1000);const mol=m.g/80.052,value=q/mol;
+    const m=mass(.35,3.80);const hm=measured(15.0,42.0);const positive=Math.random()<.7;let q=(m.g/MOLAR_MASS.ammoniumNitrate)*hm.v*(positive?1:-1);let qu=pick(['kJ','J']);let qDisp=qu==='kJ'?sig(Math.abs(q),3):sig(Math.abs(q)*1000,3);q=(positive?1:-1)*(qu==='kJ'?qDisp:qDisp/1000);const mol=m.g/MOLAR_MASS.ammoniumNitrate,value=q/mol;
     return base({id:5,category:'Molar enthalpy',title:'Dissolution: find ΔH per mole',method:'heatMoles',
-      prompt:`When <strong>${m.s} ${m.unit}</strong> of ammonium nitrate (NH₄NO₃) dissolves in water, <strong>${pretty(qDisp,3)} ${qu}</strong> of heat is <strong>${positive?'absorbed':'released'}</strong>. What is the <strong>signed molar enthalpy of solution</strong>, in kJ/mol?`,
-      expected:numericAnswer(value,'kJ/mol'),hints:['Molar enthalpy has units of kJ/mol, so divide heat in kJ by moles of solute.','NH₄NO₃ has molar mass 80.052 g/mol.','Heat absorbed means positive ΔH; heat released means negative ΔH.'],
-      solutions:[sol('Mass of NH₄NO₃ → moles',`${texNum(m.s)}\\ \\mathrm{${m.unit}}${m.unit==='kg'?'\\times\\frac{1000\\ \\mathrm{g}}{1\\ \\mathrm{kg}}':''}\\times\\frac{1\\ \\mathrm{mol}}{80.052\\ \\mathrm{g}}=${pr(mol)}\\ \\mathrm{mol}`),
+      prompt:`When <strong>${m.s} ${m.unit}</strong> of ammonium nitrate (NH₄NO₃) dissolves in water, <strong>${scientificHTML(pretty(qDisp,3))} ${qu}</strong> of heat is <strong>${positive?'absorbed':'released'}</strong>. What is the <strong>signed molar enthalpy of solution</strong>, in kJ/mol?`,
+      expected:numericAnswer(value,'kJ/mol'),hints:['Molar enthalpy has units of kJ/mol, so divide heat in kJ by moles of solute.','NH₄NO₃ has molar mass 80.06 g/mol.','Heat absorbed means positive ΔH; heat released means negative ΔH.'],
+      solutions:[sol('Mass of NH₄NO₃ → moles',`${texNum(m.s)}\\ \\mathrm{${m.unit}}${m.unit==='kg'?'\\times\\frac{1000\\ \\mathrm{g}}{1\\ \\mathrm{kg}}':''}\\times\\frac{1\\ \\mathrm{mol}}{80.06\\ \\mathrm{g}}=${pr(mol)}\\ \\mathrm{mol}`),
       sol('Convert the heat to signed kJ',`q=${positive?'+':'-'}${texNum(pretty(qDisp,3))}\\ \\mathrm{${qu}}${qu==='J'?'\\times\\frac{1\\ \\mathrm{kJ}}{1000\\ \\mathrm{J}}':''}=${q>=0?'+':''}${pr(q)}\\ \\mathrm{kJ}`),
       sol('Calculate molar enthalpy',`\\Delta H_{soln}=\\frac{q}{n}=\\frac{${pr(q)}\\ \\mathrm{kJ}}{${pr(mol)}\\ \\mathrm{mol}}=${pr(value)}\\ \\mathrm{kJ/mol}`)]});
   }
@@ -209,14 +223,14 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
       ...(u==='Torr'?[sol('Convert atm to Torr',`${pr(pv)}\\ \\mathrm{atm}\\times\\frac{760\\ \\mathrm{Torr}}{1\\ \\mathrm{atm}}=${pr(ans)}\\ \\mathrm{Torr}`)]:[])]});
   }
   function gen10(){
-    const energyGiven=energy(150,1550),delta=measured(90,510),scale=pick([1,1,2]),stoich=2*scale,perRxn=delta.v*scale;const mol=energyGiven.kJ*stoich/perRxn,grams=mol*60.052;
+    const energyGiven=energy(150,1550),delta=measured(90,510),scale=pick([1,1,2]),stoich=2*scale,perRxn=delta.v*scale;const mol=energyGiven.kJ*stoich/perRxn,grams=mol*MOLAR_MASS.aceticAcid;
     return base({id:10,category:'Thermochemistry + mass',title:'Reaction heat: kJ → reactant grams',method:'thermoMass',
       prompt:`How many <strong>grams of acetic acid, HC₂H₃O₂</strong>, react when <strong>${energyGiven.s} ${energyGiven.unit}</strong> of energy are absorbed in the reaction below?`,
       equation:`${scale}\\mathrm{MgCO_3}+${stoich}\\mathrm{HC_2H_3O_2}\\rightarrow${scale}\\mathrm{Mg(C_2H_3O_2)_2}+${scale}\\mathrm{H_2CO_3}\\qquad\\Delta H=+${texNum(pretty(perRxn,3))}\\ \\mathrm{kJ}`,
-      expected:numericAnswer(grams,'g'),hints:['The ΔH is the energy for the entire reaction as written.','Use the coefficient of HC₂H₃O₂ divided by the reaction ΔH to convert kJ to moles.','Multiply moles of acid by molar mass 60.052 g/mol.'],
+      expected:numericAnswer(grams,'g'),hints:['The ΔH is the energy for the entire reaction as written.','Use the coefficient of HC₂H₃O₂ divided by the reaction ΔH to convert kJ to moles.','Multiply moles of acid by molar mass 60.06 g/mol.'],
       solutions:[sol('Convert the given energy to kJ',`${texNum(energyGiven.s)}\\ \\mathrm{${energyGiven.unit}}${energyGiven.unit==='J'?'\\times\\frac{1\\ \\mathrm{kJ}}{1000\\ \\mathrm{J}}':''}=${pr(energyGiven.kJ)}\\ \\mathrm{kJ}`),
       sol('Reaction enthalpy → moles of acid',`${pr(energyGiven.kJ)}\\ \\mathrm{kJ}\\times\\frac{${stoich}\\ \\mathrm{mol\\ HC_2H_3O_2}}{${texNum(pretty(perRxn,3))}\\ \\mathrm{kJ}}=${pr(mol)}\\ \\mathrm{mol\\ HC_2H_3O_2}`),
-      sol('Moles of acid → grams',`${pr(mol)}\\ \\mathrm{mol}\\times\\frac{60.052\\ \\mathrm{g}}{1\\ \\mathrm{mol}}=${pr(grams)}\\ \\mathrm{g}`)]});
+      sol('Moles of acid → grams',`${pr(mol)}\\ \\mathrm{mol}\\times\\frac{60.06\\ \\mathrm{g}}{1\\ \\mathrm{mol}}=${pr(grams)}\\ \\mathrm{g}`)]});
   }
   function gen11(){
     const molecules=measured(1.2e23,8.5e24),p=pressure(),t=temperature(20,680),n=molecules.v/NA,V=n*R*t.k/p.atm;
@@ -230,7 +244,7 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
       ...(vu==='mL'?[sol('Liters → milliliters',`${pr(V)}\\ \\mathrm{L}\\times\\frac{1000\\ \\mathrm{mL}}{1\\ \\mathrm{L}}=${pr(ans)}\\ \\mathrm{mL}`)]:[])]});
   }
   function gen12(){
-    const v=volume(.15,8.5),p=pressure(),t=temperature(10,240),mol=p.atm*v.L/(R*t.k),grams=mol*76.02;const u=pick(['g','kg']);const ans=u==='g'?grams:grams/1000;
+    const v=volume(.15,8.5),p=pressure(),t=temperature(10,240),mol=p.atm*v.L/(R*t.k),grams=mol*MOLAR_MASS.dinitrogenTrioxide;const u=pick(['g','kg']);const ans=u==='g'?grams:grams/1000;
     return base({id:12,category:'Ideal gas + molar mass',title:'P, V, T → grams of gas',method:'gasMass',
       prompt:`How many <strong>${u}</strong> of dinitrogen trioxide (N₂O₃) are present in a <strong>${v.s} ${v.unit}</strong> container at <strong>${t.s} ${t.unit}</strong> and <strong>${p.s} ${p.unit}</strong>?`,
       expected:numericAnswer(ans,u),hints:['PV=nRT finds moles of the gas. Multiply by molar mass to obtain grams.','Molar mass of N₂O₃ = 2(14.01) + 3(16.00) = 76.02 g/mol.','Convert mL→L, °C→K and Torr→atm as needed.'],
@@ -278,7 +292,7 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
   function makeCorrect(){if(!state.wrong){state.score.correct++;state.score.streak++;state.score.best=Math.max(state.score.best,state.score.streak);updateScore();}}
   const showFeedback=(message,kind='bad')=>{const f=$('feedback');f.className='feedback '+kind;f.innerHTML=message;};
   const clearFeedback=()=>{$('feedback').className='feedback hidden';$('feedback').innerHTML='';};
-  function formatFinal(q){const e=q.expected;if(e.kind==='word')return e.value;const s=pretty(e.value,e.digits);return `${s} ${e.unit}${q.explanation&&e.value<0?' (heat released)':''}`;}
+  function formatFinal(q){const e=q.expected;if(e.kind==='word')return e.value;const s=scientificHTML(pretty(e.value,e.digits));return `${s} ${e.unit}${q.explanation&&e.value<0?' (heat released)':''}`;}
   function renderMath(){if(window.MathJax?.typesetPromise){window.MathJax.typesetPromise([$('questionCard'),$('unitsModal')]).catch(()=>{});}}
   function stageHeader(){const isFirst=state.stage===1;const isDone=state.stage===3;$('phaseArea').innerHTML=`<span class="step-dot ${isFirst?'active':'done'}">1</span><span>Identify the equation</span><span aria-hidden="true">→</span><span class="step-dot ${isDone?'done':!isFirst?'active':''}">2</span><span>Type the answer</span>`;}
   function options(){const q=state.q;const opts=shuffle([q.method,...decoys[q.method]]);state.options=opts;return opts.map((m,i)=>`<button type="button" class="choice" data-method="${m}"><span class="letter">${i+1}</span><span>${methods[m][0]}<br>${mj(methods[m][1])}</span></button>`).join('');}
@@ -288,12 +302,12 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
     return `<section class="selected-method" aria-label="Chosen equation or calculation"><div class="selected-label">✓ Your selected equation / conversion</div><div class="selected-name">${name}</div><div class="selected-equation">${display(latex)}</div></section>`;
   }
   function renderStage(){stageHeader();const q=state.q;const area=$('stageArea');if(state.stage===1){area.innerHTML=`<div class="step-title">Stage 1 · Which equation or conversion sequence should you use?</div><div class="choice-grid" id="methodChoices">${options()}</div><div class="supinfo">Choose with a click or number key 1–4. You can retry after a wrong choice.</div>`;area.querySelectorAll('[data-method]').forEach(x=>x.addEventListener('click',()=>chooseMethod(x.dataset.method)));}
-    else if(state.stage===2){const e=q.expected;const numeric=e.kind==='number';area.innerHTML=`${selectedMethodMarkup()}<div class="step-title">Stage 2 · ${numeric?'Calculate and type your final numeric answer':'Type the conceptual classification'}</div><div class="answer-row"><div class="answer-field"><label class="sr-only" for="answerInput">Your answer</label><input id="answerInput" type="text" autocomplete="off" spellcheck="false" inputmode="${numeric?'decimal':'text'}" placeholder="${numeric?'e.g. 2.30 or 5.50e3':'e.g. endothermic'}"></div>${numeric&&!state.units?`<div class="unit-suffix">${e.unit}</div>`:''}<button id="checkBtn" class="primary" type="button">Check ↵</button></div><div class="supinfo">${numeric?'Significant figures count. '+(state.units?'Your unit is checked after the number.':'The target unit is displayed beside the field.'):'Enter the name of the process or property; spelling must be recognizable.'}</div>`;
+    else if(state.stage===2){const e=q.expected;const numeric=e.kind==='number';area.innerHTML=`${selectedMethodMarkup()}<div class="step-title">Stage 2 · ${numeric?'Calculate and type your final numeric answer':'Type the conceptual classification'}</div><div class="answer-row"><div class="answer-field"><label class="sr-only" for="answerInput">Your answer</label><input id="answerInput" type="text" autocomplete="off" spellcheck="false" inputmode="text" placeholder="${numeric?'e.g. 2.30 or 5.50x10^3':'e.g. endothermic'}"></div>${numeric&&!state.units?`<div class="unit-suffix">${e.unit}</div>`:''}<button id="checkBtn" class="primary" type="button">Check ↵</button></div><div class="supinfo">${numeric?'±1.5% value tolerance; significant figures count. '+(state.units?'Your unit is checked after the number.':'The target unit is displayed beside the field.'):'Enter the name of the process or property; spelling must be recognizable.'}</div>`;
       $('checkBtn').addEventListener('click',checkAnswer);$('answerInput').focus();}
     else {area.innerHTML=`${selectedMethodMarkup()}<div class="feedback good"><strong>${state.revealed?'Answer revealed':state.wrong?'Completed after practice':'Correct on the first try!'}</strong>${state.revealed?'Study the explanation below.':`Final answer: <strong>${formatFinal(q)}</strong>`} <span class="muted">Choose Next for another problem.</span></div>`;}
     $('hintBtn').disabled=state.stage===3;$('answerBtn').disabled=state.stage===3;$('nextBtn').innerHTML=`${state.stage===3?'Next question':'Skip to next'} <span class="key" data-shortcut="N"></span>`;renderShortcutHints();renderMath();}
   function newProblem(){if(state.index>=state.deck.length){state.round++;state.index=0;state.deck=shuffle([...Array(14).keys()]);}const i=state.deck[state.index++];state.q=factories[i]();state.stage=1;state.wrong=false;state.revealed=false;state.solShown=false;state.unitPending=false;state.hintIndex=0;state.attempts=0;state.selectedMethod=null;
-    $('questionTitle').textContent=state.q.title;$('categoryTag').textContent=state.q.category;$('promptArea').innerHTML=`<div class="prompt">${state.q.prompt}</div>${state.q.equation?`<div class="equation">${display(state.q.equation)}</div>`:''}`;
+    $('questionTitle').textContent=state.q.title;$('categoryTag').textContent=state.q.category;$('promptArea').innerHTML=`<div class="prompt">${scientificHTML(state.q.prompt)}</div>${state.q.equation?`<div class="equation">${display(state.q.equation)}</div>`:''}`;
     $('solutionArea').innerHTML='';clearFeedback();$('deckState').textContent=`Round ${state.round} · ${state.index} of 14`;$('progressBar').style.width=(100*(state.index-1)/14)+'%';renderStage();}
   function chooseMethod(m){if(state.stage!==1)return; if(m!==state.q.method){makeBad();state.attempts++;showFeedback(`<strong>Not quite — try again.</strong> ${state.q.hints[0]||'Look at the data and the requested quantity.'}`);return;}state.stage=2;state.selectedMethod=m;state.hintIndex=0;showFeedback('<strong>Correct equation or method.</strong> Now calculate the final answer with the required significant figures.','good');renderStage();}
   function normalizeNumeric(raw){let s=raw.trim().replace(/[−–]/g,'-').replace(/,/g,'').replace(/\s+/g,'');s=s.replace(/[×xX*]10\^?\(?([+-]?\d+)\)?/g,'e$1');if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(s))return null;const value=Number(s);if(!Number.isFinite(value))return null;let mant=s.split(/e/i)[0].replace(/^[+-]/,'');let digits;if(mant.includes('.'))digits=mant.replace('.','').replace(/^0+/,'').length;else digits=mant.replace(/^0+/,'').replace(/0+$/,'').length; if(value===0) digits=mant.includes('.')?mant.replace('.','').replace(/^0+/,'').length+1:1;return {value,digits,raw:s};}
@@ -305,10 +319,11 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
       if(!accepted){makeBad();state.attempts++;showFeedback('That classification is not correct. '+state.q.hints[Math.min(state.attempts-1,state.q.hints.length-1)]);return;}
       finishSolved();return;
     }
-    const parsed=normalizeNumeric(raw);if(!parsed){showFeedback('Enter a numeric value such as 2.30, -5500, or 5.50e3. Do not type the unit in the number field.');return;}
-    const expectedRounded=Number(e.value.toPrecision(e.digits));const expectedSize=Math.abs(expectedRounded);const place=Math.pow(10,Math.floor(Math.log10(Math.max(expectedSize,1e-100)))-e.digits+1);const tol=Math.abs(place)*0.501+Math.abs(expectedRounded)*1e-12;
-    if(Math.abs(parsed.value-expectedRounded)>tol){makeBad();state.attempts++;let h=state.q.hints[Math.min(state.attempts-1,state.q.hints.length-1)];showFeedback(`<strong>The numeric value isn't correct yet.</strong> ${h}`);inp.focus();inp.select();return;}
-    if(parsed.digits!==e.digits){makeBad();state.attempts++;showFeedback(`<strong>The numeric value is right, but significant figures are not.</strong> This problem requires <strong>${e.digits}</strong> significant figures; you entered <strong>${parsed.digits}</strong>. Keep or add trailing zeros explicitly. For large integers use scientific notation (e.g. 5.50e3).`);inp.focus();inp.select();return;}
+    const parsed=normalizeNumeric(raw);if(!parsed){showFeedback('Enter a numeric value such as 2.30, -5500, 5.50x10^3, or 5.50*10^3. Do not type the unit in the number field.');return;}
+    // Check ±1.5% against the unrounded calculation, and count sig figs independently.
+    const tol=Math.abs(e.value)*0.015 + Number.EPSILON*Math.max(1,Math.abs(e.value))*8;
+    if(Math.abs(parsed.value-e.value)>tol){makeBad();state.attempts++;let h=state.q.hints[Math.min(state.attempts-1,state.q.hints.length-1)];showFeedback(`<strong>The numeric value is outside the ±1.5% range.</strong> ${h}`);inp.focus();inp.select();return;}
+    if(parsed.digits!==e.digits){makeBad();state.attempts++;showFeedback(`<strong>The numeric value is right, but significant figures are not.</strong> This problem requires <strong>${e.digits}</strong> significant figures; you entered <strong>${parsed.digits}</strong>. Keep or add trailing zeros explicitly. For large integers use scientific notation (e.g. 5.50x10^3 or 5.50*10^3).`);inp.focus();inp.select();return;}
     if(state.units){openUnitModal();return;}finishSolved();
   }
   function openUnitModal(){state.unitPending=true;const opts=shuffle(unitPacks[state.q.expected.unit]||[state.q.expected.unit,'mol','g','L','J']);$('unitChoices').innerHTML=opts.map((x,i)=>`<button class="choice" type="button" data-unit="${x}"><span class="letter">${i+1}</span><span>${x}</span></button>`).join('');$('unitFeedback').className='feedback hidden';$('unitsModal').classList.remove('hidden');$('unitChoices').querySelectorAll('[data-unit]').forEach(x=>x.addEventListener('click',()=>checkUnit(x.dataset.unit)));$('unitChoices button')?.focus();}
@@ -316,7 +331,13 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
   function closeUnitModal(){state.unitPending=false;$('unitsModal').classList.add('hidden');}
   function finishSolved(){makeCorrect();state.stage=3;clearFeedback();renderStage();$('progressBar').style.width=(100*state.index/14)+'%';}
   function showHint(){if(state.stage===3)return;makeBad();let list=state.q.hints.length?state.q.hints:['Check your units and identify the unknown quantity.'];const hint=list[Math.min(state.hintIndex,list.length-1)];state.hintIndex++;showFeedback(`<strong>Hint ${state.hintIndex}</strong> ${hint}`,'bad');}
-  function displaySolution(){const q=state.q;const steps=q.solutions.map((s,i)=>`<div class="sol-step"><div class="s-title">${i+1}. ${s.name}</div><div class="math">${display(s.tex)}</div>${s.note?`<div class="note">${s.note}</div>`:''}</div>`).join('');$('solutionArea').innerHTML=`<section class="solution"><h3>Dimensional-analysis solution</h3>${steps}<div class="answer-emphasis">Final: ${formatFinal(q)}</div>${q.explanation?`<div class="sol-step note">${q.explanation}</div>`:''}</section>`;state.solShown=true;renderMath();$('solutionArea').scrollIntoView({block:'nearest',behavior:'smooth'});}
+  function displaySolution(){
+    const q=state.q, [methodName,methodLatex]=methods[state.selectedMethod||q.method];
+    const methodStep=`<div class="sol-step"><div class="s-title">1. Stage 1 · Correct equation / conversion path</div><div class="note">${methodName}</div><div class="math">${display(methodLatex)}</div></div>`;
+    const steps=q.solutions.map((s,i)=>`<div class="sol-step"><div class="s-title">${i+2}. ${s.name}</div><div class="math">${display(s.tex)}</div>${s.note?`<div class="note">${scientificHTML(s.note)}</div>`:''}</div>`).join('');
+    $('solutionArea').innerHTML=`<section class="solution"><h3>Dimensional-analysis solution</h3>${methodStep}${steps}<div class="answer-emphasis">Final: ${formatFinal(q)}</div>${q.explanation?`<div class="sol-step note">${q.explanation}</div>`:''}</section>`;
+    state.solShown=true;renderMath();$('solutionArea').scrollIntoView({block:'nearest',behavior:'smooth'});
+  }
   function revealAnswer(solution=false){if(state.stage===3){if(solution&&!state.solShown)displaySolution();return;}makeBad();state.revealed=true;state.stage=3;closeUnitModal();renderStage();showFeedback(`<strong>Correct answer:</strong> ${formatFinal(state.q)}. ${solution?'Full dimensional analysis is shown below.':'Select Show solution to see every step.'}`,'good');if(solution)displaySolution();}
   function nextProblem(){if(state.unitPending)closeUnitModal();if(state.stage!==3)makeBad();newProblem();}
   $('hintBtn').addEventListener('click',showHint);$('skipBtn').addEventListener('click',nextProblem);$('answerBtn').addEventListener('click',()=>revealAnswer(false));$('solutionBtn').addEventListener('click',()=>revealAnswer(true));$('nextBtn').addEventListener('click',nextProblem);
@@ -333,7 +354,7 @@ window.MathJax = { tex: {inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]'
     if(e.key==='Enter'){if(state.stage===2){e.preventDefault();checkAnswer();}else if(state.stage===3){e.preventDefault();nextProblem();}}
   });
   renderShortcutHints();setTheme();setUnits(state.units);updateScore();newProblem();
-  window.CHM110Test={factories,methods,normalizeNumeric,pretty,sig}; // Enables optional local automated QA.
+  window.CHM110Test={factories,methods,normalizeNumeric,pretty,scientificHTML,sig,ATOMIC_MASS,MOLAR_MASS}; // Enables optional local automated QA.
 })();
 </script>
 </body>
