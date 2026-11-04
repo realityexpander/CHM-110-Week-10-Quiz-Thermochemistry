@@ -6,7 +6,7 @@ Each exercise first asks you to **identify the correct equation or conversion pa
 
 **Version:** v4 — chemical-name-to-formula practice, five additional binary gases, alternating hot/cold-water examples, version/date-time footer, and expanded outcome-based scoring. The app's footer includes the local creation timestamp (Eastern Time).
 
-**Live source:** [CHM-110-Week-10-Quiz-Thermochemistry](https://github.com/realityexpander/CHM-110-Week-10-Quiz-Thermochemistry)
+**Live source:** [CHM-110-Week-10-Quiz-Thermochemistry](https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/)
 
 ## Features
 
