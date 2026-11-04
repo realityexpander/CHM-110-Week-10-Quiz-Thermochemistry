@@ -4,7 +4,7 @@ A single-page, two-stage chemistry practice app for **CHM-110 Week 10: gas laws,
 
 Each exercise first asks you to **identify the correct equation or conversion path** (multiple choice), then requires you to **type the final answer with the correct significant figures**. Incorrect attempts provide hints, and complete solutions show the dimensional-analysis setup **with units**.
 
-**Version:** v7 — Units Mode OFF provides a five-choice unit dropdown directly beside the Stage 2 numeric field. Students select a unit before pressing Check; the popup is no longer gated by a correct numeric answer. ON continues displaying the requested unit. The footer displays v7.11.03.2026.21.53 (Eastern Time).
+**Version:** v8 — The six scoring cards now display in a single horizontal row (scrollable on narrow screens); the score labels have been shortened. Units Mode OFF provides a five-choice unit dropdown directly beside the Stage 2 numeric field. Students select a unit before pressing Check; the popup is no longer gated by a correct numeric answer. ON continues displaying the requested unit. The footer displays v8.11.03.2026.22.02 (Eastern Time).
 
 **Live App:** is live at [https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/](https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/)
 
@@ -29,7 +29,7 @@ The app also displays these five facts at the top of its expandable notes panel,
 - **Units Mode:** OFF shows a **Choose units ▾** button beside the numeric answer input. Click it at any time during Stage 2 to open a popup with **five different units**, select one, then press Check. Both the numeric value (with significant figures) and selected unit must be correct to finish. ON shows the expected unit beside the numeric field, without the popup. Conceptual questions do not require units.
 - **Unlimited retries**, escalating hints, **Skip**, **Show answer**, and **Show solution**. After revealing the answer or solution, the previous answer-entry field remains on screen, retains any typed response, and is disabled along with its Check button.
 - **Dimensional-analysis solutions**, including the original **Stage 1 equation / selected method**, chemical mole ratios, and explicit factor-label units.
-- **Six scoring cards:** Correct (first try), Correct after attempts, Incorrect (questions with wrong submissions), Skipped (including answer reveals), Percent Correct, and Streak/Best Streak. Results persist in browser storage and can be reset.
+- **Six scoring cards in one horizontal row:** Correct (first try), Correct after attempts, Incorrect, Skipped & Revealed, Correct & completed (percentage), and Streak/Best Streak. On narrow displays, scroll the score row horizontally instead of wrapping it. Results persist in browser storage and can be reset.
 - After success, navigation is labeled **Next Question** and the separate Skip button is hidden. The submitted answer remains visible in a disabled field. A solved problem that needed retries is labeled **Completed successfully after multiple attempts**.
 - **Dark and light themes**, responsive layout, keyboard shortcuts with platform-aware button/help labels (`Opt+` on Mac or `Alt+` on Windows), and LaTeX rendering via MathJax.
 - **No build tools, framework, installation, backend, or account required.** The application is one HTML file.
@@ -55,7 +55,7 @@ The app also displays these five facts at the top of its expandable notes panel,
 
 ## Run locally
 
-1. Download [`index_v7.html`](index_v7.html) (or the deployment-ready `index.html` from the ZIP).
+1. Download [`index_v8.html`](index_v8.html) (or the deployment-ready `index.html` from the ZIP).
 2. Double-click the file to open it in a modern browser; alternatively, serve it with a small static server.
 3. Allow access to the internet so MathJax can render the LaTeX mathematics.
 
@@ -64,7 +64,7 @@ All quiz logic is embedded in the single HTML file. The only external runtime re
 ## Deploy on GitHub Pages
 
 1. Create (or open) the repository **`realityexpander/CHM-110-Week-10-Quiz-Thermochemistry`**.
-2. Upload `index.html` from the ZIP to the root of the default branch (`main`). This is the deploy-ready copy of `index_v7.html`. Upload this `README.md` alongside it. You can also keep `index_v7.html` in the repository for version history.
+2. Upload `index.html` from the ZIP to the root of the default branch (`main`). This is the deploy-ready copy of `index_v8.html`. Upload this `README.md` alongside it. You can also keep `index_v8.html` in the repository for version history.
 3. In the repository, navigate to **Settings → Pages**.
 4. Under **Build and deployment**, select **Deploy from a branch**.
 5. Choose `main` and `/ (root)`, then save.
@@ -74,15 +74,15 @@ All quiz logic is embedded in the single HTML file. The only external runtime re
 
 The Live App URL is provided above. The deployment must be published from the repository root for that address to serve the latest version.
 
-## How scoring works (v7)
+## How scoring works (v8)
 
 - **Correct:** number of questions completed with both stages right **on the first attempt and without a hint**.
 - **Correct after attempts:** number of questions eventually completed after any wrong submission or hint. Displays the message **Completed successfully after multiple attempts**.
 - **Incorrect:** number of distinct questions for which **one or more wrong answers** were submitted; repeated wrong answers on the *same question* count just once. It is a diagnostic counter, so it can overlap with Correct after attempts or Skipped.
-- **Skipped:** number of questions left unfinished by Skip/Skip to next; **Show answer / Show solution** before solving also counts as skipped. Once a question is complete, Next Question does **not** add to Skipped.
-- **Percent Correct:** `(Correct + Correct after attempts) / (Correct + Correct after attempts + Skipped) × 100%`. This measures the share of finished questions that you solved, with or without retries. The Incorrect counter is not included separately because that would double count questions solved after a wrong attempt.
+- **Skipped & Revealed:** number of questions left unfinished by Skip/Skip to next; **Show answer / Show solution** before solving also counts as skipped. Once a question is complete, Next Question does **not** add to Skipped.
+- **Correct & completed:** `(Correct + Correct after attempts) / (Correct + Correct after attempts + Skipped) × 100%`. This measures the share of finished questions that you solved, with or without retries. The Incorrect counter is not included separately because that would double count questions solved after a wrong attempt.
 - **Streak:** consecutive first-try correct questions; a wrong answer, hint, skip, or reveal resets it. **Best Streak** records the longest streak.
-- **Reset score** clears these counters. Version 7 keeps the existing v4 scoring storage key so your saved totals carry forward. Theme preferences persist. The Units Mode preference uses a new v6 key because the switch meanings changed: OFF now tests units; ON displays them.
+- **Reset score** clears these counters. Version 8 keeps the existing v4 scoring storage key so your saved totals carry forward. Theme preferences persist. The Units Mode preference uses a new v6 key because the switch meanings changed: OFF now tests units; ON displays them.
 
 ## Keyboard shortcuts
 
@@ -127,6 +127,8 @@ Five extra binary compounds were selected using [OpenStax Chemistry 2e, chemical
 These are **ideal-gas classroom exercises**, not predictions of real equilibrium gas mixtures. For example, nitrogen dioxide can form an equilibrium mixture with dinitrogen tetroxide, and dinitrogen trioxide is an idealized example at typical conditions.
 
 ## Version history
+
+- **v8:** Arranged all six score cards in one horizontal row, with sideways scrolling on narrow screens. Shortened the three labels to **Incorrect**, **Skipped & Revealed**, and **Correct & completed**. Retained all grading and score storage behavior.
 
 - **v7:** Fixed Units Mode OFF so the five-choice unit popup is accessible directly beside the Stage 2 numeric input before the answer is graded. Students choose a unit before pressing Check; incorrect units can be retried and count as incorrect attempts. The selected unit remains visible after answer reveals (disabled), and correct unit choices never reveal the answer in advance. Preserved v6 course notes, keyboard shortcuts, scoring, and solution behavior.
 
