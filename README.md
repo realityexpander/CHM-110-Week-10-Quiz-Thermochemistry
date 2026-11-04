@@ -4,9 +4,9 @@ A single-page, two-stage chemistry practice app for **CHM-110 Week 10: gas laws,
 
 Each exercise first asks you to **identify the correct equation or conversion path** (multiple choice), then requires you to **type the final answer with the correct significant figures**. Incorrect attempts provide hints, and complete solutions show the dimensional-analysis setup **with units**.
 
-**Version:** v4 — chemical-name-to-formula practice, five additional binary gases, alternating hot/cold-water examples, version/date-time footer, and expanded outcome-based scoring. The app's footer includes the local creation timestamp (Eastern Time).
+**Version:** v5 — keeps the typed-answer field visible and disabled after a question is completed or an answer/solution is revealed, and updates the Live App link. The footer displays v5.11.03.2026.19.42 (Eastern Time).
 
-**Live source:** [CHM-110-Week-10-Quiz-Thermochemistry](https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/)
+**Live App:** is live at [https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/](https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/)
 
 ## Features
 
@@ -17,10 +17,10 @@ Each exercise first asks you to **identify the correct equation or conversion pa
 - **Randomized values and presentation:** mass (g/kg), volume (L/mL), pressure (atm/Torr), temperature (°C/K), heat (J/kJ), enthalpy signs, and balanced-reaction scaling where applicable.
 - **Answer validation:** numerical answers within **±1.5%** of the unrounded expected result are accepted **only if the required significant-figure count also matches**. Accepts scientific notation such as `1.10x10^23`, `1.10*10^23`, `1.10×10^23`, and `1.10e23`. App displays scientific values as **6.31 × 10⁴** rather than `6.31e+4`.
 - **Units Mode:** OFF displays the expected unit beside the answer field; ON requires selecting the correct unit from a pop-up with **at least four options** after the numeric answer is right.
-- **Unlimited retries**, escalating hints, **Skip**, **Show answer**, and **Show solution**.
+- **Unlimited retries**, escalating hints, **Skip**, **Show answer**, and **Show solution**. After revealing the answer or solution, the previous answer-entry field remains on screen, retains any typed response, and is disabled along with its Check button.
 - **Dimensional-analysis solutions**, including the original **Stage 1 equation / selected method**, chemical mole ratios, and explicit factor-label units.
 - **Six scoring cards:** Correct (first try), Correct after attempts, Incorrect (questions with wrong submissions), Skipped (including answer reveals), Percent Correct, and Streak/Best Streak. Results persist in browser storage and can be reset.
-- After success, navigation is labeled **Next Question** and the separate Skip button is hidden. A solved problem that needed retries is labeled **Completed successfully after multiple attempts**.
+- After success, navigation is labeled **Next Question** and the separate Skip button is hidden. The submitted answer remains visible in a disabled field. A solved problem that needed retries is labeled **Completed successfully after multiple attempts**.
 - **Dark and light themes**, responsive layout, keyboard shortcuts with platform-aware button/help labels (`Opt+` on Mac or `Alt+` on Windows), and LaTeX rendering via MathJax.
 - **No build tools, framework, installation, backend, or account required.** The application is one HTML file.
 
@@ -45,7 +45,7 @@ Each exercise first asks you to **identify the correct equation or conversion pa
 
 ## Run locally
 
-1. Download [`index_v4.html`](index_v4.html) (or the deployment-ready `index.html` from the ZIP).
+1. Download [`index_v5.html`](index_v4.html) (or the deployment-ready `index.html` from the ZIP).
 2. Double-click the file to open it in a modern browser; alternatively, serve it with a small static server.
 3. Allow access to the internet so MathJax can render the LaTeX mathematics.
 
@@ -54,7 +54,7 @@ All quiz logic is embedded in the single HTML file. The only external runtime re
 ## Deploy on GitHub Pages
 
 1. Create (or open) the repository **`realityexpander/CHM-110-Week-10-Quiz-Thermochemistry`**.
-2. Upload `index.html` from the ZIP to the root of the default branch (`main`). This is the deploy-ready copy of `index_v4.html`. Upload this `README.md` alongside it. You can also keep `index_v4.html` in the repository for version history.
+2. Upload `index.html` from the ZIP to the root of the default branch (`main`). This is the deploy-ready copy of `index_v5.html`. Upload this `README.md` alongside it. You can also keep `index_v5.html` in the repository for version history.
 3. In the repository, navigate to **Settings → Pages**.
 4. Under **Build and deployment**, select **Deploy from a branch**.
 5. Choose `main` and `/ (root)`, then save.
@@ -62,9 +62,9 @@ All quiz logic is embedded in the single HTML file. The only external runtime re
 
    `https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/`
 
-The address above is the *expected* Pages URL, not a claim that Pages is already configured or live.
+The Live App URL is provided above. The deployment must be published from the repository root for that address to serve the latest version.
 
-## How scoring works (v4)
+## How scoring works (v5)
 
 - **Correct:** number of questions completed with both stages right **on the first attempt and without a hint**.
 - **Correct after attempts:** number of questions eventually completed after any wrong submission or hint. Displays the message **Completed successfully after multiple attempts**.
@@ -72,7 +72,7 @@ The address above is the *expected* Pages URL, not a claim that Pages is already
 - **Skipped:** number of questions left unfinished by Skip/Skip to next; **Show answer / Show solution** before solving also counts as skipped. Once a question is complete, Next Question does **not** add to Skipped.
 - **Percent Correct:** `(Correct + Correct after attempts) / (Correct + Correct after attempts + Skipped) × 100%`. This measures the share of finished questions that you solved, with or without retries. The Incorrect counter is not included separately because that would double count questions solved after a wrong attempt.
 - **Streak:** consecutive first-try correct questions; a wrong answer, hint, skip, or reveal resets it. **Best Streak** records the longest streak.
-- **Reset score** clears these counters. Scores use a new local-storage key for v4, so earlier v3 counts are not mixed into the new scoring model; theme and Units Mode preferences persist.
+- **Reset score** clears these counters. Version 5 keeps the existing v4 scoring storage key so your saved totals carry forward; the original v4 schema began separately from v3. Theme and Units Mode preferences persist.
 
 ## Keyboard shortcuts
 
@@ -118,6 +118,7 @@ These are **ideal-gas classroom exercises**, not predictions of real equilibrium
 
 ## Version history
 
+- **v5:** Updated the README with the live GitHub Pages app address. After Show answer or Show solution, Stage 2 remains visible with the last typed response and Check button disabled (also retained after successful completion). Preserved v4 scoring data.
 - **v4:** Hides formulas in named-gas questions; adds five researched binary compounds; alternates heat-absorbing and heat-releasing water scenarios; adds footer version timestamp; changes successful navigation to **Next Question**; displays **Completed successfully after multiple attempts**; and adds **Correct after attempts** and **Skipped** counters.
 - **v3:** Added typed `x10^` and `*10^` scientific notation; readable multiplication-sign/exponent output; updated H/C/N/O atomic masses; ±1.5% numerical tolerance combined with significant-figure validation; and the Stage 1 equation at the beginning of Show Solution.
 - **v2:** Automatic `Opt+`/`Alt+` labels and selected equation displayed above Stage 2.
