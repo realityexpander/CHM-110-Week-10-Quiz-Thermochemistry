@@ -4,9 +4,19 @@ A single-page, two-stage chemistry practice app for **CHM-110 Week 10: gas laws,
 
 Each exercise first asks you to **identify the correct equation or conversion path** (multiple choice), then requires you to **type the final answer with the correct significant figures**. Incorrect attempts provide hints, and complete solutions show the dimensional-analysis setup **with units**.
 
-**Version:** v5 — keeps the typed-answer field visible and disabled after a question is completed or an answer/solution is revealed, and updates the Live App link. The footer displays v5.11.03.2026.19.42 (Eastern Time).
+**Version:** v6 — Units Mode OFF now gives a five-choice unit popup after a correct numerical answer; Units Mode ON displays the target unit. The in-app notes now list the professor-provided conversion constants. The footer displays v6.11.03.2026.21.39 (Eastern Time).
 
 **Live App:** is live at [https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/](https://realityexpander.github.io/CHM-110-Week-10-Quiz-Thermochemistry/)
+
+## Notes for Formulas, grading & keyboard shortcuts
+
+- 760 Torr = 1 atm
+- 1 kg = 1000 g, 1 L = 1000 mL
+- **STP:** This course uses 0°C, 1 atm, and 22.4 L/mol
+- Ideal gas calculations use R = 0.08206 L·atm/(mol·K)
+- 4.184 J = 1 cal
+
+The app also displays these five facts at the top of its expandable notes panel, followed by grading and shortcut guidance. The application uses MathJax from a CDN to render LaTeX, so an internet connection is recommended on first load.
 
 ## Features
 
@@ -16,7 +26,7 @@ Each exercise first asks you to **identify the correct equation or conversion pa
 - **Two stages per question:** (1) select the correct equation/method; (2) see the selected equation displayed above Stage 2 and enter a numerical answer, or type the classification for conceptual questions.
 - **Randomized values and presentation:** mass (g/kg), volume (L/mL), pressure (atm/Torr), temperature (°C/K), heat (J/kJ), enthalpy signs, and balanced-reaction scaling where applicable.
 - **Answer validation:** numerical answers within **±1.5%** of the unrounded expected result are accepted **only if the required significant-figure count also matches**. Accepts scientific notation such as `1.10x10^23`, `1.10*10^23`, `1.10×10^23`, and `1.10e23`. App displays scientific values as **6.31 × 10⁴** rather than `6.31e+4`.
-- **Units Mode:** OFF displays the expected unit beside the answer field; ON requires selecting the correct unit from a pop-up with **at least four options** after the numeric answer is right.
+- **Units Mode:** OFF hides the unit and requires selecting the correct unit from a **five-option popup** after the numeric answer is right; ON shows the expected unit beside the answer field and does not open the popup.
 - **Unlimited retries**, escalating hints, **Skip**, **Show answer**, and **Show solution**. After revealing the answer or solution, the previous answer-entry field remains on screen, retains any typed response, and is disabled along with its Check button.
 - **Dimensional-analysis solutions**, including the original **Stage 1 equation / selected method**, chemical mole ratios, and explicit factor-label units.
 - **Six scoring cards:** Correct (first try), Correct after attempts, Incorrect (questions with wrong submissions), Skipped (including answer reveals), Percent Correct, and Streak/Best Streak. Results persist in browser storage and can be reset.
@@ -45,7 +55,7 @@ Each exercise first asks you to **identify the correct equation or conversion pa
 
 ## Run locally
 
-1. Download [`index_v5.html`](index_v4.html) (or the deployment-ready `index.html` from the ZIP).
+1. Download [`index_v6.html`](index_v6.html) (or the deployment-ready `index.html` from the ZIP).
 2. Double-click the file to open it in a modern browser; alternatively, serve it with a small static server.
 3. Allow access to the internet so MathJax can render the LaTeX mathematics.
 
@@ -54,7 +64,7 @@ All quiz logic is embedded in the single HTML file. The only external runtime re
 ## Deploy on GitHub Pages
 
 1. Create (or open) the repository **`realityexpander/CHM-110-Week-10-Quiz-Thermochemistry`**.
-2. Upload `index.html` from the ZIP to the root of the default branch (`main`). This is the deploy-ready copy of `index_v5.html`. Upload this `README.md` alongside it. You can also keep `index_v5.html` in the repository for version history.
+2. Upload `index.html` from the ZIP to the root of the default branch (`main`). This is the deploy-ready copy of `index_v6.html`. Upload this `README.md` alongside it. You can also keep `index_v6.html` in the repository for version history.
 3. In the repository, navigate to **Settings → Pages**.
 4. Under **Build and deployment**, select **Deploy from a branch**.
 5. Choose `main` and `/ (root)`, then save.
@@ -64,7 +74,7 @@ All quiz logic is embedded in the single HTML file. The only external runtime re
 
 The Live App URL is provided above. The deployment must be published from the repository root for that address to serve the latest version.
 
-## How scoring works (v5)
+## How scoring works (v6)
 
 - **Correct:** number of questions completed with both stages right **on the first attempt and without a hint**.
 - **Correct after attempts:** number of questions eventually completed after any wrong submission or hint. Displays the message **Completed successfully after multiple attempts**.
@@ -72,7 +82,7 @@ The Live App URL is provided above. The deployment must be published from the re
 - **Skipped:** number of questions left unfinished by Skip/Skip to next; **Show answer / Show solution** before solving also counts as skipped. Once a question is complete, Next Question does **not** add to Skipped.
 - **Percent Correct:** `(Correct + Correct after attempts) / (Correct + Correct after attempts + Skipped) × 100%`. This measures the share of finished questions that you solved, with or without retries. The Incorrect counter is not included separately because that would double count questions solved after a wrong attempt.
 - **Streak:** consecutive first-try correct questions; a wrong answer, hint, skip, or reveal resets it. **Best Streak** records the longest streak.
-- **Reset score** clears these counters. Version 5 keeps the existing v4 scoring storage key so your saved totals carry forward; the original v4 schema began separately from v3. Theme and Units Mode preferences persist.
+- **Reset score** clears these counters. Version 6 keeps the existing v4 scoring storage key so your saved totals carry forward. Theme preferences persist. The Units Mode preference uses a new v6 key because the switch meanings changed: OFF now tests units; ON displays them.
 
 ## Keyboard shortcuts
 
@@ -117,6 +127,8 @@ Five extra binary compounds were selected using [OpenStax Chemistry 2e, chemical
 These are **ideal-gas classroom exercises**, not predictions of real equilibrium gas mixtures. For example, nitrogen dioxide can form an equilibrium mixture with dinitrogen tetroxide, and dinitrogen trioxide is an idealized example at typical conditions.
 
 ## Version history
+
+- **v6:** Units Mode OFF now opens a five-choice popup after a correct numerical answer; ON displays the unit beside the input. Guaranteed five unique options. Expanded the app and README notes with course-provided Torr/atm, kg/g, L/mL, STP, gas constant, and cal/J conversions; moved the MathJax note to its own sentence. Preserved scoring and the disabled answer field after revealing.
 
 - **v5:** Updated the README with the live GitHub Pages app address. After Show answer or Show solution, Stage 2 remains visible with the last typed response and Check button disabled (also retained after successful completion). Preserved v4 scoring data.
 - **v4:** Hides formulas in named-gas questions; adds five researched binary compounds; alternates heat-absorbing and heat-releasing water scenarios; adds footer version timestamp; changes successful navigation to **Next Question**; displays **Completed successfully after multiple attempts**; and adds **Correct after attempts** and **Skipped** counters.
